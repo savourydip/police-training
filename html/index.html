@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Police Training System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app" class="hidden">
+        <div class="container">
+            <!-- Loading Screen -->
+            <div id="loadingScreen" class="loading-screen hidden">
+                <div class="loading-content">
+                    <div class="loading-shield">
+                        <img src="https://kappa.lol/edyMmt" alt="Shield Badge" style="width: 360px; height: 360px;">
+                    </div>
+                    <h1 class="loading-welcome">Welcome to the CRAP System</h1>
+                    <p class="loading-name" id="loadingName">Officer Name</p>
+                    <div class="loading-bar">
+                        <div class="loading-progress"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Header -->
+            <div class="header">
+                <div class="header-content">
+                    <div class="header-left">
+                        <div class="badge-icon">
+                            <img src="https://kappa.lol/edyMmt" alt="Shield Badge" style="width: 85px; height: 85px;">
+                        </div>
+                        <div class="header-text">
+                            <h1>CRAP System</h1>
+                            <p class="header-subtitle">Cadet Reporting & Assessment Platform</p>
+                        </div>
+                    </div>
+                    <button class="close-btn" id="closeBtn">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="main-content">
+                <!-- FTO View -->
+                <div id="ftoView" class="view hidden">
+                    <!-- Tab Navigation -->
+                    <div class="tab-nav">
+                        <button class="tab-btn active" data-tab="cadets">
+                            <i class="fas fa-users"></i>
+                            <span>Cadets</span>
+                        </button>
+                        <button class="tab-btn" data-tab="add">
+                            <i class="fas fa-user-plus"></i>
+                            <span>Add Cadet</span>
+                        </button>
+                    </div>
+
+                    <!-- Cadets Tab -->
+                    <div class="tab-content active" id="cadetsTab">
+                        <div class="search-bar">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="searchInput" placeholder="Search by name or citizen ID...">
+                        </div>
+                        
+                        <div class="cadets-grid" id="cadetsGrid">
+                            <!-- Cadet cards will be inserted here -->
+                        </div>
+                    </div>
+
+                    <!-- Add Cadet Tab -->
+                    <div class="tab-content" id="addTab">
+                        <div class="add-cadet-form">
+                            <h2>Add New Cadet</h2>
+                            <p class="form-description">Enter the Citizen ID of the cadet you want to add to the training program</p>
+                            
+                            <div class="form-group">
+                                <label for="citizenIdInput">
+                                    <i class="fas fa-id-card"></i>
+                                    Citizen ID
+                                </label>
+                                <input type="text" id="citizenIdInput" placeholder="e.g., ABC12345" autocomplete="off">
+                            </div>
+                            
+                            <button class="btn-primary" id="addCadetBtn">
+                                <i class="fas fa-plus"></i>
+                                Add to Training Program
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cadet View -->
+                <div id="cadetView" class="view hidden">
+                    <div class="cadet-dashboard">
+                        <div class="dashboard-header">
+                            <h2>My Training Progress</h2>
+                            <div class="progress-summary">
+                                <div class="progress-card">
+                                    <i class="fas fa-tasks"></i>
+                                    <div>
+                                        <span class="progress-label">Completed</span>
+                                        <span class="progress-value" id="cadetProgress">0%</span>
+                                    </div>
+                                </div>
+                                <div class="progress-card">
+                                    <i class="fas fa-user-tie"></i>
+                                    <div>
+                                        <span class="progress-label">FTO</span>
+                                        <span class="progress-value" id="cadetFTO">-</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="phases-container" id="cadetPhases">
+                            <!-- Phases will be inserted here -->
+                        </div>
+
+                        <div class="exam-section" id="cadetExamSection" style="display: none;">
+                            <button class="btn-exam" id="startExamBtn">
+                                <i class="fas fa-graduation-cap"></i>
+                                Take Final Exam
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cadet Detail Modal -->
+                <div id="cadetModal" class="modal hidden">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <div class="modal-title">
+                                <i class="fas fa-user-circle"></i>
+                                <h3 id="modalCadetName">Cadet Name</h3>
+                            </div>
+                            <button class="modal-close" id="modalClose">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+
+                        <div class="modal-body">
+                            <div class="cadet-info">
+                                <div class="info-item">
+                                    <span class="info-label">Citizen ID:</span>
+                                    <span class="info-value" id="modalCitizenId">-</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Primary FTO:</span>
+                                    <span class="info-value" id="modalFTO">-</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Started:</span>
+                                    <span class="info-value" id="modalStarted">-</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Status:</span>
+                                    <span class="info-value" id="modalStatus">-</span>
+                                </div>
+                            </div>
+
+                            <div class="modal-tabs">
+                                <button class="modal-tab-btn active" data-modal-tab="progress">Progress</button>
+                                <button class="modal-tab-btn" data-modal-tab="comments">Comments</button>
+                                <button class="modal-tab-btn" data-modal-tab="exam">Exam</button>
+                            </div>
+
+                            <div class="modal-tab-content active" id="progressContent">
+                                <div id="modalPhases">
+                                    <!-- Training phases will be inserted here -->
+                                </div>
+                            </div>
+
+                            <div class="modal-tab-content" id="commentsContent">
+                                <div class="comments-section">
+                                    <div class="add-comment">
+                                        <textarea id="commentInput" placeholder="Add a comment about this cadet's performance..." rows="3"></textarea>
+                                        <button class="btn-primary" id="addCommentBtn">
+                                            <i class="fas fa-comment"></i>
+                                            Add Comment
+                                        </button>
+                                    </div>
+                                    <div class="comments-list" id="commentsList">
+                                        <!-- Comments will be inserted here -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="modal-tab-content" id="examContent">
+                                <div class="exam-results" id="examResults">
+                                    <!-- Exam results will be shown here -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button class="btn-danger" id="deleteRecordBtn">
+                                <i class="fas fa-trash"></i>
+                                Delete Record
+                            </button>
+                            <button class="btn-success" id="completeTrainingBtn">
+                                <i class="fas fa-check-circle"></i>
+                                Mark as Completed
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exam Modal -->
+                <div id="examModal" class="modal hidden">
+                    <div class="modal-content exam-modal-content">
+                        <div class="modal-header">
+                            <div class="modal-title">
+                                <i class="fas fa-graduation-cap"></i>
+                                <h3>Final Training Exam</h3>
+                            </div>
+                        </div>
+
+                        <div class="modal-body">
+                            <div class="exam-info">
+                                <p>This exam tests your knowledge of police procedures and protocols.</p>
+                                <p><strong>Passing Score:</strong> <span id="examPassingScore">80</span>%</p>
+                            </div>
+
+                            <div id="examQuestions">
+                                <!-- Questions will be inserted here -->
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button class="btn-secondary" id="cancelExamBtn">Cancel</button>
+                            <button class="btn-primary" id="submitExamBtn">
+                                <i class="fas fa-paper-plane"></i>
+                                Submit Exam
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Confirmation Modal -->
+                <div id="confirmationModal" class="modal hidden">
+                    <div class="modal-content confirmation-modal-content">
+                        <div class="modal-header">
+                            <div class="modal-title">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <h3 id="confirmTitle">Confirm Action</h3>
+                            </div>
+                        </div>
+
+                        <div class="modal-body">
+                            <p id="confirmMessage">Are you sure?</p>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button class="btn-secondary" id="confirmCancelBtn">Cancel</button>
+                            <button class="btn-primary" id="confirmActionBtn">Confirm</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
